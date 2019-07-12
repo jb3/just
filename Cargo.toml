@@ -1,0 +1,10 @@
+[package]
+name = "just"
+version = "0.1.0"
+authors = ["Joseph Banks <joseph@josephbanks.me>"]
+edition = "2018"
+
+[dependencies]
+clap = "*"
+log = "*"
+colored = "*"

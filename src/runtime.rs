@@ -8,6 +8,7 @@ enum Types {
     String(String),
     Number(i64),
     Boolean(bool),
+    Array(Vec<Types>),
     Null,
 }
 
@@ -127,6 +128,22 @@ impl Executor {
                 .get(ident)
                 .expect(&format!("Variable not found {}", ident))
                 .clone(),
+            Token::Array { value: vals } => {
+                let old_tokens = &self.tokens.clone();
+
+                self.tokens = vals.to_vec();
+
+                let mut vals: Vec<Types> = vec![];
+
+                while !self.tokens.is_empty() {
+                    let next_token = self.tokens.remove(0);
+                    vals.push(self.parse_value(&next_token));
+                }
+
+                self.tokens = old_tokens.to_vec();
+
+                Types::Array(vals)
+            }
             Token::Boolean { value: b } => Types::Boolean(*b),
             _ => Types::Null,
         };

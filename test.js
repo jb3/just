@@ -1,6 +1,6 @@
-let a = 12 * 4;
-let b = a / 2;
+let defaultGreeting = "Hello ";
 
-let name = "Joseph";
+let person1 = "Joseph";
+let person2 = "Sam";
 
-let greeting = "Hello " + name;
+let greetings = [defaultGreeting + person1, defaultGreeting + person2];

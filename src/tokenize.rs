@@ -1,5 +1,5 @@
 const KEYWORDS: &'static [&'static str] = &["let", "true", "false"];
-const OPERATORS: &'static [&'static str] = &["=", "+"];
+const OPERATORS: &'static [&'static str] = &["=", "+", "-", "*", "/"];
 
 #[derive(Clone, Debug)]
 pub enum Keyword {
@@ -11,6 +11,9 @@ pub enum Keyword {
 pub enum Operator {
     Equals,
     Plus,
+    Subtract,
+    Multiply,
+    Divide,
     Nothing,
 }
 
@@ -112,6 +115,9 @@ impl Tokenizer {
         let op = match token.as_str() {
             "=" => Operator::Equals,
             "+" => Operator::Plus,
+            "-" => Operator::Subtract,
+            "*" => Operator::Multiply,
+            "/" => Operator::Divide,
             _ => Operator::Nothing,
         };
 

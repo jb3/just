@@ -1,7 +1,7 @@
 use super::tokenize::*;
 use log::info;
 use std::collections::HashMap;
-use std::ops::Add;
+use std::ops::*;
 
 #[derive(Clone, Debug)]
 enum Types {
@@ -18,6 +18,75 @@ impl Add for Types {
         match (self, other) {
             (Types::String(a), Types::String(b)) => Types::String(format!("{}{}", a, b)),
             (Types::Number(a), Types::Number(b)) => Types::Number(a + b),
+            (a, b) => {
+                let a_string = format!("{:?}", a);
+                let b_string = format!("{:?}", b);
+
+                let a_type = a_string.split("(").collect::<Vec<&str>>();
+                let b_type = b_string.split("(").collect::<Vec<&str>>();
+
+                panic!(
+                    "Cannot add types {} and {}",
+                    a_type.first().unwrap(),
+                    b_type.first().unwrap()
+                )
+            }
+        }
+    }
+}
+
+impl Sub for Types {
+    type Output = Self;
+
+    fn sub(self, other: Self) -> Self {
+        match (self, other) {
+            (Types::Number(a), Types::Number(b)) => Types::Number(a - b),
+            (a, b) => {
+                let a_string = format!("{:?}", a);
+                let b_string = format!("{:?}", b);
+
+                let a_type = a_string.split("(").collect::<Vec<&str>>();
+                let b_type = b_string.split("(").collect::<Vec<&str>>();
+
+                panic!(
+                    "Cannot add types {} and {}",
+                    a_type.first().unwrap(),
+                    b_type.first().unwrap()
+                )
+            }
+        }
+    }
+}
+
+impl Div for Types {
+    type Output = Self;
+
+    fn div(self, other: Self) -> Self {
+        match (self, other) {
+            (Types::Number(a), Types::Number(b)) => Types::Number(a / b),
+            (a, b) => {
+                let a_string = format!("{:?}", a);
+                let b_string = format!("{:?}", b);
+
+                let a_type = a_string.split("(").collect::<Vec<&str>>();
+                let b_type = b_string.split("(").collect::<Vec<&str>>();
+
+                panic!(
+                    "Cannot add types {} and {}",
+                    a_type.first().unwrap(),
+                    b_type.first().unwrap()
+                )
+            }
+        }
+    }
+}
+
+impl Mul for Types {
+    type Output = Self;
+
+    fn mul(self, other: Self) -> Self {
+        match (self, other) {
+            (Types::Number(a), Types::Number(b)) => Types::Number(a * b),
             (a, b) => {
                 let a_string = format!("{:?}", a);
                 let b_string = format!("{:?}", b);
@@ -62,16 +131,42 @@ impl Executor {
             _ => Types::Null,
         };
 
-        if let Token::Operator { op: Operator::Plus } =
-            self.tokens.first().unwrap_or(&Token::Nothing)
-        {
+        if let Token::Operator { op } = self.tokens.first().unwrap_or(&Token::Nothing) {
+            let op = op.clone();
             &self.tokens.remove(0);
 
-            let next_token = &self.tokens.remove(0);
+            match op {
+                Operator::Plus => {
+                    let next_token = &self.tokens.remove(0);
 
-            let to_add = self.parse_value(next_token);
+                    let to_add = self.parse_value(next_token);
 
-            var_val + to_add
+                    var_val + to_add
+                }
+                Operator::Subtract => {
+                    let next_token = &self.tokens.remove(0);
+
+                    let to_sub = self.parse_value(next_token);
+
+                    var_val - to_sub
+                }
+                Operator::Multiply => {
+                    let next_token = &self.tokens.remove(0);
+
+                    let to_sub = self.parse_value(next_token);
+
+                    var_val * to_sub
+                }
+                Operator::Divide => {
+                    let next_token = &self.tokens.remove(0);
+
+                    let to_sub = self.parse_value(next_token);
+
+                    var_val / to_sub
+                }
+
+                _ => Types::Null,
+            }
         } else {
             var_val
         }

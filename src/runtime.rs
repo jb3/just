@@ -133,7 +133,7 @@ impl Executor {
 
         if let Token::Operator { op } = self.tokens.first().unwrap_or(&Token::Nothing) {
             let op = op.clone();
-            &self.tokens.remove(0);
+            self.tokens.remove(0);
 
             match op {
                 Operator::Plus => {
